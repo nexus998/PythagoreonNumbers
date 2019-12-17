@@ -49,6 +49,8 @@ int main(int argc, char* argv[])
 			pop esi
 	}
 	cout << answer << "\n";
+
+	//1 task. Find all pythagoreon numbers until 1000 (in Assembly)
 	cout << "Getting pythagoreon numbers..." << "\n";
 
 	ofstream o;
@@ -57,65 +59,62 @@ int main(int argc, char* argv[])
 	for (int i = 1; i <= 1000 - 4 - 1; i++) {
 		for (int j = i + 1; j <= 1000 - 4; j++) {
 
-			__declspec(align(16))float a[4];
-			__declspec(align(16))float b[4];
+			__declspec(align(16))float firstNumbers[4];
+			__declspec(align(16))float otherNumbers[4];
 			__declspec(align(16))float res[4];
 
-			float* aptr = a;
-			float* bptr = b;
-			float* resptr = res;
+			float* firstNumbersPointer = firstNumbers;
+			float* otherNumbersPointer = otherNumbers;
+			float* resPointer = res;
 
-			a[0] = i + 1;
-			a[1] = i + 2;
-			a[2] = i + 3;
-			a[3] = i + 4;
+			firstNumbers[0] = i + 1;
+			firstNumbers[1] = i + 2;
+			firstNumbers[2] = i + 3;
+			firstNumbers[3] = i + 4;
 
-			b[0] = j + 1;
-			b[1] = j + 2;
-			b[2] = j + 3;
-			b[3] = j + 4;
+			otherNumbers[0] = j + 1;
+			otherNumbers[1] = j + 2;
+			otherNumbers[2] = j + 3;
+			otherNumbers[3] = j + 4;
 
 			__asm {
-				// xmm0 pirmi keturi skaiciai
-				mov eax, aptr
+				// xmm0 take the first 4 numbers
+				mov eax, firstNumbersPointer
 				movaps xmm0, [eax]
 
-				// xmm1 kiti keturi skaiciai
-				mov eax, bptr
+				// xmm1 take the other 4 nums
+				mov eax, otherNumbersPointer
 				movaps xmm1, [eax]
 
-				//// xmm2 pirmu skaiciu kelimas kvadratu
+				//// xmm2 keliam kvadratu visus skaicius
 				movaps xmm2, xmm0
 				mulps xmm2, xmm0
-
-				// xmm3 kitu keturiu skaiciu kelimas kvadratu
 				movaps xmm3, xmm1
 				mulps xmm3, xmm1
 
-				// xmm4 kvadratu suma
+				// xmm4 sudedam pakeltus sk
 				movaps xmm4, xmm2
 				addps xmm4, xmm3
 
-				// xmm5 saknis istraukta is kvadratu sumos
+				// xmm5 traukiam sakni is sumos
 				sqrtps xmm5, xmm4
-
-				// xmm5 sveikoji dalis is saknies traukimo
+				// xmm5 apvalinam iki int 
 				roundps xmm5, xmm5, 1
 
-				// xmm5 kvadratu suma sveikosios dalies
+				// xmm5 keliam kvadratu
 				mulps xmm5, xmm5
 
-				// xmm5 skirtumas tarp xmm5 ir xmm4
+				// xmm5 randam skirtuma
 				subps xmm5, xmm4
 
 				// result
-				mov eax, resptr
+				mov eax, resPointer
 				movaps[eax], xmm5
 			}
 
 			for (int k = 0; k < 4; k++) {
 				if (res[k] == 0) {
-					o << int(a[k]) << " " << int(b[k]) << " " << int(a[k]) * int(a[k]) + int(b[k]) * int(b[k]) << endl;
+					o << int(firstNumbers[k]) << " " << int(otherNumbers[k]) << " " << int(firstNumbers[k]) * int(firstNumbers[k]) + int(otherNumbers[k]) * int(otherNumbers[k]) << endl;
 				}
 			}
 		}
