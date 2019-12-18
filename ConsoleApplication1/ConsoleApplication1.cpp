@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 	ofstream o;
 	o.open("output.txt");
 
-	for (int i = 1; i <= 1000 - 4 - 1; i++) {
+	for (int i = 1; i <= 1000 - 5; i+=4) {
 		for (int j = i + 1; j <= 1000 - 4; j++) {
 
 			__declspec(align(16))float firstNumbers[4];
@@ -67,15 +67,15 @@ int main(int argc, char* argv[])
 			float* otherNumbersPointer = otherNumbers;
 			float* resPointer = res;
 
-			firstNumbers[0] = i + 1;
-			firstNumbers[1] = i + 2;
-			firstNumbers[2] = i + 3;
-			firstNumbers[3] = i + 4;
+			firstNumbers[0] = i;
+			firstNumbers[1] = i + 1;
+			firstNumbers[2] = i + 2;
+			firstNumbers[3] = i + 3;
 
-			otherNumbers[0] = j + 1;
-			otherNumbers[1] = j + 2;
-			otherNumbers[2] = j + 3;
-			otherNumbers[3] = j + 4;
+			otherNumbers[0] = j;
+			otherNumbers[1] = j + 1;
+			otherNumbers[2] = j + 2;
+			otherNumbers[3] = j + 3;
 
 			__asm {
 				// xmm0 take the first 4 numbers
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
 
 			for (int k = 0; k < 4; k++) {
 				if (res[k] == 0) {
-					o << int(firstNumbers[k]) << " " << int(otherNumbers[k]) << " " << int(firstNumbers[k]) * int(firstNumbers[k]) + int(otherNumbers[k]) * int(otherNumbers[k]) << endl;
+					o << int(firstNumbers[k]) << " " << int(otherNumbers[k]) << " " << sqrt(int(firstNumbers[k]) * int(firstNumbers[k]) + int(otherNumbers[k]) * int(otherNumbers[k])) << endl;
 				}
 			}
 		}
